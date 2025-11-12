@@ -1,77 +1,42 @@
-import java.util.Objects;
+public class PersonBuilder {
+    private String name;
+    private String surname;
+    private int age = Person.UNKNOWN_AGE;
+    private String address;
 
-public class Person {
-    protected final String name;
-    protected final String surname;
-    protected Integer age;
-    protected String address;
-
-    public Person(String name, String surname, Integer age, String address) {
-        if (name == null)
-            throw new IllegalArgumentException("Поле не может быть пустым");
-        if (surname == null)
-            throw new IllegalArgumentException("Поле не может быть пустой");
-        if (age != null && age < 0)
-            throw new IllegalArgumentException("Поле пустое любо введен некорректный возраст");
+    public PersonBuilder setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Поле имени не может быть пустым");
+        }
         this.name = name;
+        return this;
+    }
+
+    public PersonBuilder setSurname(String surname) {
+        if (surname == null) {
+            throw new IllegalArgumentException("Поле фамилии не может быть пустым");
+        }
         this.surname = surname;
+        return this;
+    }
+
+    public PersonBuilder setAge(int age) {
+        if (age < Person.UNKNOWN_AGE)
+            throw new IllegalArgumentException("Некорректный возраст");
         this.age = age;
+        return this;
+    }
+
+    public PersonBuilder setAddress(String address) {
         this.address = address;
+        return this;
     }
 
-    public boolean hasAge() {
-        return age != null;
+    public Person build() {
+        if (name == null)
+            throw new IllegalStateException("Не указано имя");
+        if (surname == null)
+            throw new IllegalStateException("Не указана фамилия");
+        return new Person(name, surname, age);
     }
-
-    public boolean hasAddress() {
-        return address != null;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void happyBirthday() {
-        if (hasAge()) age++;
-    }
-
-    @Override
-    public String toString() {
-        return "Person{name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                (hasAge() ? ", age=" + age : "") +
-                (hasAddress() ? ", address='" + address + '\'' : "") +
-                '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, surname, age, address);
-    }
-
-
-    public PersonBuilder newChildBuilder() {
-        return new PersonBuilder()
-                .setSurname(this.surname)
-                .setAddress(this.address)
-                .setAge(0);
-    }
-
 }
-
