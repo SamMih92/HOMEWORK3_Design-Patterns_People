@@ -1,22 +1,28 @@
 public class PersonBuilder {
     private String name;
     private String surname;
-    private Integer age;
+    private int age = Person.UNKNOWN_AGE;
     private String address;
 
     public PersonBuilder setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Поле имени не может быть пустым");
+        }
         this.name = name;
         return this;
     }
 
     public PersonBuilder setSurname(String surname) {
+        if (surname == null) {
+            throw new IllegalArgumentException("Поле фамилии не может быть пустым");
+        }
         this.surname = surname;
         return this;
     }
 
     public PersonBuilder setAge(int age) {
-        if (age < 0)
-            throw new IllegalArgumentException("Возраст не может быть отрицательным");
+        if (age < Person.UNKNOWN_AGE)
+            throw new IllegalArgumentException("Некорректный возраст");
         this.age = age;
         return this;
     }
@@ -31,8 +37,6 @@ public class PersonBuilder {
             throw new IllegalStateException("Не указано имя");
         if (surname == null)
             throw new IllegalStateException("Не указана фамилия");
-        if (age != null && age < 0)
-            throw new IllegalArgumentException("Некорректный возраст");
-        return new Person(name, surname, age, address);
+        return new Person(name, surname, age);
     }
 }
