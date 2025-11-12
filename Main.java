@@ -1,31 +1,28 @@
 public class Main {
     public static void main(String[] args) {
-
-        // проверка создания объекта взрослого человека
-
-        Person person = new PersonBuilder()
+        Person mom = new PersonBuilder()
+                .setName("Анна")
+                .setSurname("Вольф")
+                .setAge(31)
+                .setAddress("Сидней")
+                .build();
+        Person son = mom.newChildBuilder()
                 .setName("Антошка")
-                .setSurname("Лопатов")
-                .setAge(48)
-                .setAddress("Москва")
                 .build();
+        System.out.println("У " + mom + " есть сын, " + son);
 
-        System.out.println(person.getName() + " " + person.getSurname());
-        System.out.println("Возраст: " + (person.hasAge() ? person.getAge() : "Неизвестен"));
-        System.out.println("Город проживания: " + (person.hasAddress() ? person.getAddress() : "Неизвестен"));
+        try {
+            // Не хватает обязательных полей
+            new PersonBuilder().build();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
-        // Проверка корректности метода happyBirthday
-
-        person.happyBirthday();
-        System.out.println("С днём рождения! Новый возраст: " + person.getAge());
-
-        // Проверка создания объекта ребенка
-
-        Person child = person.newChildBuilder()
-                .setName("Петя")
-                .build();
-        System.out.println(child.getName() + " " + child.getSurname());
-        System.out.println("Возраст ребенка: " + (child.hasAge() ? child.getAge() : "Неизвестен"));
-        System.out.println("Город проживания ребенка: " + (child.hasAddress() ? child.getAddress() : "Неизвестен"));
+        try {
+            // Возраст недопустимый
+            new PersonBuilder().setAge(-100).build();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }
